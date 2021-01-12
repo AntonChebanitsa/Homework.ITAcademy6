@@ -9,9 +9,10 @@ namespace Homework.ITAcademy6
         static void Main(string[] args)
         {
             var handler = new FileHandler();
-            
-            handler.SplitBySentences();
+
+            //handler.SplitBySentences();
             //handler.SplitByWords();
+            handler.SplitByPunctuationMarks();
         }
     }
 }

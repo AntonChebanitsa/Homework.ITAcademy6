@@ -17,13 +17,12 @@ namespace Homework.ITAcademy6
         public void SplitBySentences()
         {
             var text = FileReader();
-            var newText = Regex.Split(text, "[!.?;:\\n\\t]",RegexOptions.None);
-            //var separators = new char[] { '!', '.', '?', '\t', '\n', ';' };
-            //var sentences = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var sentences = Regex.Split(text, "[!.?;\\t]",RegexOptions.None);
+
 
             var writePath = "D:\\SplitedBySentences.txt";
             var writer = new StreamWriter(writePath, false);
-            foreach (var sentence in newText)
+            foreach (var sentence in sentences)
             {
                 writer.WriteLine(sentence.Trim());
             }
@@ -32,7 +31,7 @@ namespace Homework.ITAcademy6
         public void SplitByWords()
         {
             var text = FileReader();
-            var newText = Regex.Replace(text, "[!.?(),\"\\-;:\t \n]", " ");
+            var newText = Regex.Replace(text, "[!.?(),\"\\-;:\\t\\n]", " ");
             var words = newText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             var writePath = "D:\\SplitedByWords.txt";
@@ -43,17 +42,18 @@ namespace Homework.ITAcademy6
             }
         }
 
-        public string[] SplitByPunctuationMarks()
+        public void SplitByPunctuationMarks()
         {
             var text = FileReader();
-            var separators = new char[] { '!', '.', '?', '(', ')', '"', '-', ';', ':' };
-            var textSplitedByPunctuationMarks = text.Split(separators);
-            return textSplitedByPunctuationMarks;
-        }
+            var newText = Regex.Replace(text, "[!.?(),\"\\-;:\\n]", "~");
+            var words = newText.Split(new char[] { '~' }, StringSplitOptions.RemoveEmptyEntries);
 
-        public void WriteToFile()
-        {
-
+            var writePath = "D:\\SplitedByPunctuationMark.txt";
+            var writer = new StreamWriter(writePath, false);
+            foreach (var word in words)
+            {
+                writer.WriteLine(word.Trim());
+            }
         }
     }
 }
