@@ -16,29 +16,31 @@ namespace Homework.ITAcademy6
 
         public void SplitBySentences()
         {
-            var writePath = "D:\\SplitedBySentences.txt";
-
             var text = FileReader();
-            var separators = new string[] { "! ", ". ", "? ", "\t", "\n", "!", "?", ".", }; //TODO Add RegEx Here
-            var sentences = text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            var newText = Regex.Split(text, "[!.?;:\\n\\t]",RegexOptions.None);
+            //var separators = new char[] { '!', '.', '?', '\t', '\n', ';' };
+            //var sentences = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
+            var writePath = "D:\\SplitedBySentences.txt";
             var writer = new StreamWriter(writePath, false);
-            foreach (var sentence in sentences)
+            foreach (var sentence in newText)
             {
-                if (sentence[0] == ' ')
-                {
-                    sentence[0].ToString().TrimStart(' ');
-                }
-                writer.WriteLine(sentence);
+                writer.WriteLine(sentence.Trim());
             }
         }
 
-        public string[] SplitIntoWords()
+        public void SplitByWords()
         {
             var text = FileReader();
-            var newText = Regex.Replace(text, "[-!.?(),\"\\-;:]", "");
+            var newText = Regex.Replace(text, "[!.?(),\"\\-;:\t \n]", " ");
             var words = newText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            return words;
+
+            var writePath = "D:\\SplitedByWords.txt";
+            var writer = new StreamWriter(writePath, false);
+            foreach (var word in words)
+            {
+                writer.WriteLine(word);
+            }
         }
 
         public string[] SplitByPunctuationMarks()

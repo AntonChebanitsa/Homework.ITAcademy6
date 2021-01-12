@@ -11,6 +11,7 @@ namespace Homework.ITAcademy6
             var handler = new FileHandler();
             
             handler.SplitBySentences();
+            //handler.SplitByWords();
         }
     }
 }
