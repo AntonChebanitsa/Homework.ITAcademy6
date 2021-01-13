@@ -23,40 +23,30 @@ namespace Homework.ITAcademy6
             var text = FileReader();
             var sentences = Regex.Split(text, "[!.?;\\t\\r\\v]", RegexOptions.Compiled);
 
-            
-            var writePath = "D:\\SplitedBySentences.txt";
-            WriteToFile(sentences, writePath);
             return sentences;
         }
 
-        public void SplitByWords()
+        public string[] SplitByWords()
         {
             var text = FileReader();
             var newText = Regex.Replace(text, "[!.?(),\"\\-;:\\s]", " ");
             var words = newText.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
-            var writePath = "D:\\SplitedByWords.txt";
-
-            WriteToFile(words, writePath);
+            return words;
         }
 
-        public void SplitByPunctuationMarks()
+        public string[] SplitByPunctuationMarks()
         {
             var text = FileReader();
             var expressions = text.Split(new char[] {'!', '.', '?', ',', '(', ')', '\"', '-', ';', ':'},
                 StringSplitOptions.RemoveEmptyEntries);
 
-            var writePath = "D:\\SplitedByPunctuationMark.txt";
-
-            WriteToFile(expressions, writePath);
+            return expressions;
         }
 
         public void SortByAlphabet()
         {
-            var reader = new StreamReader("D:\\SplitedByWords.txt");
-            var text = reader.ReadToEnd();
-
-            var words = text.Split(new char[] {' '}).ToList();
+            var words=SplitByWords();
             var sortedWords = words
                 .Select(g => new
                 {
@@ -72,6 +62,27 @@ namespace Homework.ITAcademy6
             }
         }
 
+        public void DisplayLongestSentenceBySymbols()
+        {
+            SplitBySentences();
+
+
+        }
+
+        public void DisplayShorterSentenceByWords()
+        {
+            SplitBySentences();
+
+
+        }
+
+        public void MostCommonLetter()
+        {
+
+
+
+        }
+
         public void WriteToFile(string[] expressions, string writePath)
         {
             var writer = new StreamWriter(writePath, false);
@@ -81,11 +92,11 @@ namespace Homework.ITAcademy6
             }
         }
 
-        public void DisplayLongestSentenceBySymbols()
+        public void WriteSplitedFiles()
         {
-            var reader = new StreamReader("D:\\SplitedBySentences.txt");
-            var text = reader.ReadToEnd();
-            
+            WriteToFile(SplitBySentences(), "D:\\SplitedBySentences.txt");
+            WriteToFile(SplitByWords(), "D:\\SplitedByWords.txt");
+            WriteToFile(SplitByPunctuationMarks(), "D:\\SplitedByPunctuationMark.txt");
         }
     }
 }

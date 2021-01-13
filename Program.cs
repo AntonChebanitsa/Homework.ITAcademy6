@@ -8,17 +8,16 @@ namespace Homework.ITAcademy6
     {
         static void Main(string[] args)
         {
-            var handler = new FileHandler();
-
-            handler.SplitBySentences();
-            handler.SplitByWords();
-            handler.SplitByPunctuationMarks();
-            handler.SortByAlphabet();
+            Run();
         }
 
         static void Run()
         {
+            var handler = new FileHandler();
 
+            handler.WriteSplitedFiles();
+
+            handler.SortByAlphabet();
         }
 
     }
