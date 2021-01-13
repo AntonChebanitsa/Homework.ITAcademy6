@@ -29,8 +29,8 @@ namespace Homework.ITAcademy6
         public string[] SplitByWords()
         {
             var text = FileReader();
-            var newText = Regex.Replace(text, "[!.?(),\"\\-;:\\s]", " ");
-            var words = newText.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+            var newText = Regex.Replace(text, "[^a-zA-Z$]", " ");
+            var words = newText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             return words;
         }
@@ -38,7 +38,7 @@ namespace Homework.ITAcademy6
         public string[] SplitByPunctuationMarks()
         {
             var text = FileReader();
-            var expressions = text.Split(new char[] {'!', '.', '?', ',', '(', ')', '\"', '-', ';', ':'},
+            var expressions = text.Split(new char[] { '!', '.', '?', ',', '(', ')', '\"', '-', ';', ':' },
                 StringSplitOptions.RemoveEmptyEntries);
 
             return expressions;
@@ -46,19 +46,22 @@ namespace Homework.ITAcademy6
 
         public void SortByAlphabet() //todo need to fix it
         {
-            var words=SplitByWords();
+            var words = SplitByWords();
             var sortedWords = words
-                .Select(g => new
-                {
-                    Word = g,
-                    Count = g.Distinct().Count()
-                })
-                .ToList();
+                .GroupBy(w => w, StringComparer.OrdinalIgnoreCase)
+                 .Select(key => new
+                 {
+                     Word = key,
+                     Count = key.Count()
+                 })
+                .ToList()
+                .OrderBy(x => x.Word.Key);
+            
 
             var writer = new StreamWriter("D:\\SortedByAlphabet.txt", false);
             foreach (var expression in sortedWords)
             {
-                writer.WriteLine($"{expression.Word}- {expression.Count}");
+                writer.WriteLine($"{expression.Word.Key}- {expression.Count}");
             }
         }
 
@@ -78,7 +81,26 @@ namespace Homework.ITAcademy6
 
         public void MostCommonLetter()
         {
+            var text = FileReader().ToLower();
+            var charArray = Regex.Replace(text, @"[^A-Z]+", String.Empty).ToCharArray();
 
+            var dictionary = new Dictionary<char, int>();
+            var counter = 1;
+            foreach (var letter in charArray)
+            {
+                if (!dictionary.ContainsKey(letter))
+                {
+                    dictionary.Add(letter, counter);
+                }
+                else
+                {
+                    dictionary[letter] += 1;
+                }
+
+            }
+
+            //После цикла проходите по всему словарю, и ищите максимальное значение.
+            //Console.WriteLine(charArray.GroupBy(c => c).OrderByDescending(g => g.Count()).First().Key) ;
 
 
         }

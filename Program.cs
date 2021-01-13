@@ -15,9 +15,10 @@ namespace Homework.ITAcademy6
         {
             var handler = new FileHandler();
 
-            handler.WriteSplitedFiles();
+            //handler.WriteSplitedFiles();
 
             handler.SortByAlphabet();
+            handler.MostCommonLetter();
         }
 
     }
