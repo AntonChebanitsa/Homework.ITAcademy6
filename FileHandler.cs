@@ -44,7 +44,7 @@ namespace Homework.ITAcademy6
             return expressions;
         }
 
-        public void SortByAlphabet()
+        public void SortByAlphabet() //todo need to fix it
         {
             var words=SplitByWords();
             var sortedWords = words
