@@ -15,6 +15,7 @@ namespace Homework.ITAcademy6
         public string FileReader()
         {
             var reader = new StreamReader(PATH_TO_START_FILE);
+
             return reader.ReadToEnd();
         }
 
@@ -29,7 +30,7 @@ namespace Homework.ITAcademy6
         public string[] SplitByWords()
         {
             var text = FileReader();
-            var newText = Regex.Replace(text, "[^a-zA-Z$]", " ");
+            var newText = Regex.Replace(text, "[^a-zA-Z]", " ");
             var words = newText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             return words;
@@ -44,7 +45,7 @@ namespace Homework.ITAcademy6
             return expressions;
         }
 
-        public void SortByAlphabet() //todo need to fix it
+        public void SortByAlphabet() 
         {
             var words = SplitByWords();
             var sortedWords = words
@@ -54,9 +55,8 @@ namespace Homework.ITAcademy6
                      Word = key,
                      Count = key.Count()
                  })
-                .ToList()
-                .OrderBy(x => x.Word.Key);
-            
+                .OrderBy(x => x.Word.Key)
+                .ToList();
 
             var writer = new StreamWriter("D:\\SortedByAlphabet.txt", false);
             foreach (var expression in sortedWords)
@@ -82,7 +82,7 @@ namespace Homework.ITAcademy6
         public void MostCommonLetter()
         {
             var text = FileReader().ToLower();
-            var charArray = Regex.Replace(text, @"[^A-Z]+", String.Empty).ToCharArray();
+            var charArray = Regex.Replace(text, @"[^a-z]+", String.Empty).ToCharArray();
 
             var dictionary = new Dictionary<char, int>();
             var counter = 1;
@@ -96,11 +96,11 @@ namespace Homework.ITAcademy6
                 {
                     dictionary[letter] += 1;
                 }
-
             }
 
-            //После цикла проходите по всему словарю, и ищите максимальное значение.
-            //Console.WriteLine(charArray.GroupBy(c => c).OrderByDescending(g => g.Count()).First().Key) ;
+            Console.WriteLine(dictionary.Values.Max());
+            dictionary.Keys.Max();  //todo need to end output
+            
 
 
         }
@@ -120,5 +120,11 @@ namespace Homework.ITAcademy6
             WriteToFile(SplitByWords(), "D:\\SplitedByWords.txt");
             WriteToFile(SplitByPunctuationMarks(), "D:\\SplitedByPunctuationMark.txt");
         }
+
+        //todo В ещё один файл вывести с новой строки
+        //o самое длинное предложение по количеству символов
+        //    o самое короткое предложение по количеству слов
+        //o самую встречающуюся букву
+
     }
 }
