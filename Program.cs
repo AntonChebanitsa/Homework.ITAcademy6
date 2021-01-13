@@ -12,7 +12,9 @@ namespace Homework.ITAcademy6
 
             //handler.SplitBySentences();
             //handler.SplitByWords();
-            handler.SplitByPunctuationMarks();
+            //handler.SplitByPunctuationMarks();
+            handler.SortByAlphabet();
         }
+
     }
 }
