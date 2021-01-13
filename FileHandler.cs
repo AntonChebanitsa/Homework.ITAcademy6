@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Homework.ITAcademy6
 {
@@ -15,21 +18,22 @@ namespace Homework.ITAcademy6
             return reader.ReadToEnd();
         }
 
-        public void SplitBySentences()
+        public string[] SplitBySentences()
         {
             var text = FileReader();
             var sentences = Regex.Split(text, "[!.?;\\t\\r\\v]", RegexOptions.Compiled);
 
-
+            
             var writePath = "D:\\SplitedBySentences.txt";
             WriteToFile(sentences, writePath);
+            return sentences;
         }
 
         public void SplitByWords()
         {
             var text = FileReader();
             var newText = Regex.Replace(text, "[!.?(),\"\\-;:\\s]", " ");
-            var words = newText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var words = newText.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
             var writePath = "D:\\SplitedByWords.txt";
 
@@ -39,25 +43,33 @@ namespace Homework.ITAcademy6
         public void SplitByPunctuationMarks()
         {
             var text = FileReader();
-            var expressions = text.Split(new char[] { '!', '.', '?', ',', '(', ')', '\"', '-', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+            var expressions = text.Split(new char[] {'!', '.', '?', ',', '(', ')', '\"', '-', ';', ':'},
+                StringSplitOptions.RemoveEmptyEntries);
 
             var writePath = "D:\\SplitedByPunctuationMark.txt";
 
-            WriteToFile(expressions,writePath);
+            WriteToFile(expressions, writePath);
         }
 
         public void SortByAlphabet()
         {
-            var path = "D:\\SplitedByWords.txt";
-            var writePath = "D:\\SortedByAlphabet.txt";
-            var reader = new StreamReader(path);
+            var reader = new StreamReader("D:\\SplitedByWords.txt");
+            var text = reader.ReadToEnd();
 
-            var text=reader.ReadToEnd();
-            var words = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var words = text.Split(new char[] {' '}).ToList();
+            var sortedWords = words
+                .Select(g => new
+                {
+                    Word = g,
+                    Count = g.Distinct().Count()
+                })
+                .ToList();
 
-            var sorted= Array.Sort(words, (p, q) => p[0].CompareTo(q[0]));
-            WriteToFile(words, writePath);
-
+            var writer = new StreamWriter("D:\\SortedByAlphabet.txt", false);
+            foreach (var expression in sortedWords)
+            {
+                writer.WriteLine($"{expression.Word}- {expression.Count}");
+            }
         }
 
         public void WriteToFile(string[] expressions, string writePath)
@@ -67,6 +79,13 @@ namespace Homework.ITAcademy6
             {
                 writer.WriteLine(expression.Trim());
             }
+        }
+
+        public void DisplayLongestSentenceBySymbols()
+        {
+            var reader = new StreamReader("D:\\SplitedBySentences.txt");
+            var text = reader.ReadToEnd();
+            
         }
     }
 }

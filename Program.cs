@@ -10,10 +10,15 @@ namespace Homework.ITAcademy6
         {
             var handler = new FileHandler();
 
-            //handler.SplitBySentences();
-            //handler.SplitByWords();
-            //handler.SplitByPunctuationMarks();
+            handler.SplitBySentences();
+            handler.SplitByWords();
+            handler.SplitByPunctuationMarks();
             handler.SortByAlphabet();
+        }
+
+        static void Run()
+        {
+
         }
 
     }
