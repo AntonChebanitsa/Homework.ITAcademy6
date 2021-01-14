@@ -10,7 +10,7 @@ namespace Homework.ITAcademy6
 {
     public class FileHandler
     {
-        private  string PATH_TO_START_FILE = "D:\\sample.txt";
+        private string PATH_TO_START_FILE = "D:\\sample.txt";
 
         public string FileReader()
         {
@@ -22,9 +22,10 @@ namespace Homework.ITAcademy6
         public string[] SplitBySentences()
         {
             var text = FileReader();
-            var sentences = Regex.Split(text, "[!.?;\\t\\r\\v]", RegexOptions.Compiled);
-
-            return sentences;
+            var sentences = Regex.Split(text, "[!.?;\"\\t\\r\\v\\n]", RegexOptions.Compiled);
+            var result = sentences.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            
+            return result;
         }
 
         public string[] SplitByWords()
@@ -45,7 +46,7 @@ namespace Homework.ITAcademy6
             return expressions;
         }
 
-        public void SortByAlphabet() 
+        public void SortByAlphabet()
         {
             var words = SplitByWords();
             var sortedWords = words
@@ -67,14 +68,28 @@ namespace Homework.ITAcademy6
 
         public void DisplayLongestSentenceBySymbols()
         {
-            SplitBySentences();
+            var sentences = SplitBySentences();
 
+            string longestSentence=null;
+            var max = 0;
+            foreach (var t in sentences)
+            {
+                var symbols = t.ToCharArray();
+                if (max >= symbols.Length) continue;
+                longestSentence = t;
+                max = symbols.Length;
+            }
 
+            var result = $"The longest sentence in terms of the number of characters is: {longestSentence}.\n" +
+                         $"Number of characters is {max}";
+
+            Console.WriteLine(result);
         }
 
         public void DisplayShorterSentenceByWords()
         {
             SplitBySentences();
+            // o самое короткое предложение по количеству слов
 
 
         }
@@ -102,10 +117,10 @@ namespace Homework.ITAcademy6
             var max = 0;
             foreach (var pair in dictionary)
             {
-                if (max<pair.Value)
+                if (max < pair.Value)
                 {
                     max = pair.Value;
-                    mostCommonLetter=pair.Key;
+                    mostCommonLetter = pair.Key;
                 }
             }
 
