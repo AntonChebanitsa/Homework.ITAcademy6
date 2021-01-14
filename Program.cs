@@ -18,7 +18,7 @@ namespace Homework.ITAcademy6
             //handler.WriteSplitedFiles();
 
             //handler.SortByAlphabet();
-            handler.MostCommonLetter();
+            handler.WriteAdditionalDataFile();
         }
 
     }

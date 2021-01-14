@@ -10,7 +10,7 @@ namespace Homework.ITAcademy6
 {
     public class FileHandler
     {
-        private const string PATH_TO_START_FILE = "D:\\sample.txt";
+        private  string PATH_TO_START_FILE = "D:\\sample.txt";
 
         public string FileReader()
         {
@@ -79,7 +79,7 @@ namespace Homework.ITAcademy6
 
         }
 
-        public void MostCommonLetter()
+        public string MostCommonLetter()
         {
             var text = FileReader().ToLower();
             var charArray = Regex.Replace(text, @"[^a-z]+", String.Empty).ToCharArray();
@@ -98,12 +98,21 @@ namespace Homework.ITAcademy6
                 }
             }
 
-            Console.WriteLine(dictionary.Values.Max());
-            dictionary.Keys.Max();  //todo need to end output
-            
+            char mostCommonLetter = default;
+            var max = 0;
+            foreach (var pair in dictionary)
+            {
+                if (max<pair.Value)
+                {
+                    max = pair.Value;
+                    mostCommonLetter=pair.Key;
+                }
+            }
 
-
-        }
+            var result = $"The most common letter is {mostCommonLetter}. Occurs {max} times."; // todo remove this where added writing to file
+            Console.WriteLine(result);
+            return result;
+        }//todo
 
         public void WriteToFile(string[] expressions, string writePath)
         {
@@ -121,10 +130,14 @@ namespace Homework.ITAcademy6
             WriteToFile(SplitByPunctuationMarks(), "D:\\SplitedByPunctuationMark.txt");
         }
 
-        //todo В ещё один файл вывести с новой строки
-        //o самое длинное предложение по количеству символов
-        //    o самое короткое предложение по количеству слов
-        //o самую встречающуюся букву
+        public void WriteAdditionalDataFile()
+        {
+            var writePath = "D:\\AdditionalDataFile.txt";
+            var writer = new StreamWriter(writePath, false);
 
+            //writer.WriteLine(DisplayLongestSentenceBySymbols());
+            //writer.WriteLine(DisplayShorterSentenceByWords());
+            writer.WriteLine(MostCommonLetter());
+        }//todo need to write realization
     }
 }
