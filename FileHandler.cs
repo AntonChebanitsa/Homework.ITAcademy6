@@ -10,21 +10,21 @@ namespace Homework.ITAcademy6
 {
     public class FileHandler
     {
-        private string PATH_TO_START_FILE = "D:\\sample.txt";
+        private string _pathToReadingWritingFolder = "D:\\";
 
         public string FileReader()
         {
-            var reader = new StreamReader(PATH_TO_START_FILE);
+            var reader = new StreamReader(_pathToReadingWritingFolder + "sample.txt");
 
             return reader.ReadToEnd();
         }
 
-        public string[] SplitBySentences()
+        public string[] SplitBySentences()// todo wrong!! need correct regex or another way
         {
             var text = FileReader();
-            var sentences = Regex.Split(text, "[!.?;\"\\t\\r\\v\\n]", RegexOptions.Compiled);
+            var sentences = Regex.Split(text, @"(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s", RegexOptions.Compiled);
             var result = sentences.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-            
+
             return result;
         }
 
@@ -46,6 +46,7 @@ namespace Homework.ITAcademy6
             return expressions;
         }
 
+
         public void SortByAlphabet()
         {
             var words = SplitByWords();
@@ -66,11 +67,12 @@ namespace Homework.ITAcademy6
             }
         }
 
-        public void DisplayLongestSentenceBySymbols()
+
+        public string DisplayLongestSentenceBySymbols() //check after changing the split pattern
         {
             var sentences = SplitBySentences();
 
-            string longestSentence=null;
+            string longestSentence = null;
             var max = 0;
             foreach (var t in sentences)
             {
@@ -84,15 +86,38 @@ namespace Homework.ITAcademy6
                          $"Number of characters is {max}";
 
             Console.WriteLine(result);
+
+            return result;
         }
 
-        public void DisplayShorterSentenceByWords()
+        public void DisplayShortestSentenceByWords()//todo wrong job due to split(possible)
         {
-            SplitBySentences();
+            var sentences = SplitBySentences();
+
+            string shortestSentence = null;
+            var min = 1000;
+            var counter = 0;
+            foreach (var sentence in sentences)
+            {
+                int NumberOfWords = sentence.Split(' ').Length;
+                Console.WriteLine($"{NumberOfWords + 1}, {sentence}");
+                counter++;
+                if (counter==100)break;
+            }
+
+            Console.WriteLine($"{min} {shortestSentence}");
+
+            var result = $"The shortest sentence in terms of the number of words is: {shortestSentence}.\n" +
+                         $"Number of words is {min}";
+
+            //Console.WriteLine(result);
+
+            //return result;
+
             // o самое короткое предложение по количеству слов
 
 
-        }
+        }// todo
 
         public string MostCommonLetter()
         {
@@ -115,19 +140,17 @@ namespace Homework.ITAcademy6
 
             char mostCommonLetter = default;
             var max = 0;
-            foreach (var pair in dictionary)
+            foreach (var pair in dictionary.Where(pair => max < pair.Value))
             {
-                if (max < pair.Value)
-                {
-                    max = pair.Value;
-                    mostCommonLetter = pair.Key;
-                }
+                max = pair.Value;
+                mostCommonLetter = pair.Key;
             }
 
             var result = $"The most common letter is {mostCommonLetter}. Occurs {max} times."; // todo remove this where added writing to file
             Console.WriteLine(result);
             return result;
         }//todo
+
 
         public void WriteToFile(string[] expressions, string writePath)
         {
@@ -140,19 +163,19 @@ namespace Homework.ITAcademy6
 
         public void WriteSplitedFiles()
         {
-            WriteToFile(SplitBySentences(), "D:\\SplitedBySentences.txt");
-            WriteToFile(SplitByWords(), "D:\\SplitedByWords.txt");
-            WriteToFile(SplitByPunctuationMarks(), "D:\\SplitedByPunctuationMark.txt");
+            WriteToFile(SplitBySentences(), _pathToReadingWritingFolder + "SplitedBySentences.txt");
+            WriteToFile(SplitByWords(), _pathToReadingWritingFolder + "SplitedByWords.txt");
+            WriteToFile(SplitByPunctuationMarks(), _pathToReadingWritingFolder + "SplitedByPunctuationMark.txt");
         }
 
         public void WriteAdditionalDataFile()
         {
-            var writePath = "D:\\AdditionalDataFile.txt";
+            var writePath = _pathToReadingWritingFolder + "AdditionalDataFile.txt";
             var writer = new StreamWriter(writePath, false);
 
             //writer.WriteLine(DisplayLongestSentenceBySymbols());
             //writer.WriteLine(DisplayShorterSentenceByWords());
             writer.WriteLine(MostCommonLetter());
-        }//todo need to write realization
+        }//todo need to be implemented
     }
 }
