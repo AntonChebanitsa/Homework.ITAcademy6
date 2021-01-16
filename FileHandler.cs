@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Homework.ITAcademy6
 {
@@ -11,51 +12,51 @@ namespace Homework.ITAcademy6
     {
         private string _pathToReadingWritingFolder = @"D:\HomeworkChebanitsa\";
 
-        public string FileReader()
+        public async Task<string> FileReader()
         {
-            var reader = new StreamReader(_pathToReadingWritingFolder + "sample.txt");
+            var text = await File.ReadAllTextAsync(_pathToReadingWritingFolder + "sample.txt");
 
-            return reader.ReadToEnd();
+            return text;
         }
 
-        public string[] SplitBySentences()
+        public async Task<string[]> SplitBySentences()
         {
-            var text = FileReader();
-            var sentences = Regex.Split(text, "[!.?;\"\\t\\r\\v\\n]", RegexOptions.Compiled);
+            var text = await FileReader();
+            var sentences =Regex.Split(text, "[!.?;\"\\t\\r\\v\\n]", RegexOptions.Compiled);
             var result = sentences.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
             return result;
         }
 
-        public string[] SplitByWords()
+        public async Task<string[]> SplitByWords()
         {
-            var text = FileReader();
+            var text = await FileReader();
             var newText = Regex.Replace(text, "[^a-zA-Z]", " ");
             var words = newText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             return words;
         }
 
-        public string[] SplitByPunctuationMarks()
+        public async Task<string[]> SplitByPunctuationMarks()
         {
-            var text = FileReader();
+            var text = await FileReader();
             var expressions = text.Split(new char[] { '!', '.', '?', ',', '(', ')', '-', ';', ':' },
-                StringSplitOptions.RemoveEmptyEntries).Where(x=> !string.IsNullOrWhiteSpace(x)).ToArray();
+                StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
             return expressions;
         }
 
 
-        public void SortByAlphabet()
+        public async void SortByAlphabet()
         {
-            var words = SplitByWords();
+            var words = await SplitByWords();
             var sortedWords = words
                 .GroupBy(w => w, StringComparer.OrdinalIgnoreCase)
-                 .Select(key => new
-                 {
-                     Word = key,
-                     Count = key.Count()
-                 })
+                .Select(key => new
+                {
+                    Word = key,
+                    Count = key.Count()
+                })
                 .OrderBy(x => x.Word.Key)
                 .ToList();
 
@@ -63,15 +64,15 @@ namespace Homework.ITAcademy6
             {
                 foreach (var expression in sortedWords)
                 {
-                    sw.WriteLine($"{expression.Word.Key}- {expression.Count}");
+                    await sw.WriteLineAsync($"{expression.Word.Key}- {expression.Count}");
                 }
             }
         }
 
 
-        public string DisplayLongestSentenceBySymbols() 
+        public async Task<string> DisplayLongestSentenceBySymbols()
         {
-            var sentences = SplitBySentences();
+            var sentences = await SplitBySentences();
 
             string longestSentence = null;
             var max = 0;
@@ -91,9 +92,9 @@ namespace Homework.ITAcademy6
                    $"Number of characters is {max}";
         }
 
-        public string DisplayShortestSentenceByWords()
+        public async Task<string> DisplayShortestSentenceByWords()
         {
-            var sentences = SplitBySentences();
+            var sentences = await SplitBySentences();
             var shortest = "Frequently.";
             var min = 1;
 
@@ -103,10 +104,10 @@ namespace Homework.ITAcademy6
             return result;
         }
 
-        public string MostCommonLetter()
+        public async Task<string> MostCommonLetter()
         {
-            var text = FileReader().ToLower();
-            var charArray = Regex.Replace(text, @"[^a-z]+", String.Empty).ToCharArray();
+            var text = await FileReader();
+            var charArray = Regex.Replace(text, @"[^a-z]+", String.Empty).ToLower().ToCharArray();
 
             var dictionary = new Dictionary<char, int>();
             var counter = 1;
@@ -134,29 +135,29 @@ namespace Homework.ITAcademy6
         }
 
 
-        public void WriteToFile(string[] expressions, string writePath)
+        public async void WriteToFile(string[] expressions, string writePath)
         {
-            using var sw = new StreamWriter(writePath, false);
+            await using var sw = new StreamWriter(writePath, false);
             {
                 foreach (var expression in expressions)
                 {
-                    sw.WriteLine(expression.Trim());
+                    await sw.WriteLineAsync(expression.Trim());
                 }
             }
         }
 
-        public void WriteSplitedFiles()
+        public async void WriteSplitedFiles()
         {
-            WriteToFile(SplitBySentences(), _pathToReadingWritingFolder + "SplitedBySentences.txt");
-            WriteToFile(SplitByWords(), _pathToReadingWritingFolder + "SplitedByWords.txt");
-            WriteToFile(SplitByPunctuationMarks(), _pathToReadingWritingFolder + "SplitedByPunctuationMark.txt");
+            WriteToFile(await SplitBySentences(), _pathToReadingWritingFolder + "SplitedBySentences.txt");
+            WriteToFile(await SplitByWords(), _pathToReadingWritingFolder + "SplitedByWords.txt");
+            WriteToFile(await SplitByPunctuationMarks(), _pathToReadingWritingFolder + "SplitedByPunctuationMark.txt");
         }
 
         public void WriteAdditionalDataFile()
         {
             var writePath = _pathToReadingWritingFolder + "AdditionalDataFile.txt";
             var str = $"{DisplayLongestSentenceBySymbols()}~ {DisplayShortestSentenceByWords()}~ {MostCommonLetter()}";
-            var arr=str.Split('~',StringSplitOptions.RemoveEmptyEntries);
+            var arr = str.Split('~', StringSplitOptions.RemoveEmptyEntries);
 
             WriteToFile(arr, writePath);
         }
