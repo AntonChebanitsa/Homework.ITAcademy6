@@ -148,9 +148,9 @@ namespace Homework.ITAcademy6
 
         public async Task WriteSplitedFiles()
         {
-            WriteToFile(await SplitBySentences(), _pathToReadingWritingFolder + "SplitedBySentences.txt");
-            WriteToFile(await SplitByWords(), _pathToReadingWritingFolder + "SplitedByWords.txt");
-            WriteToFile(await SplitByPunctuationMarks(), _pathToReadingWritingFolder + "SplitedByPunctuationMark.txt");
+            await WriteToFile(await SplitBySentences(), _pathToReadingWritingFolder + "SplitedBySentences.txt");
+            await WriteToFile(await SplitByWords(), _pathToReadingWritingFolder + "SplitedByWords.txt");
+            await WriteToFile(await SplitByPunctuationMarks(), _pathToReadingWritingFolder + "SplitedByPunctuationMark.txt");
         }
 
         public async Task WriteAdditionalDataFile()
