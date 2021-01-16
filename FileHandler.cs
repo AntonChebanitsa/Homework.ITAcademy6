@@ -39,8 +39,8 @@ namespace Homework.ITAcademy6
         public string[] SplitByPunctuationMarks()
         {
             var text = FileReader();
-            var expressions = text.Split(new char[] { '!', '.', '?', ',', '(', ')', '\"', '-', ';', ':' },
-                StringSplitOptions.RemoveEmptyEntries);
+            var expressions = text.Split(new char[] { '!', '.', '?', ',', '(', ')', '-', ';', ':' },
+                StringSplitOptions.RemoveEmptyEntries).Where(x=> !string.IsNullOrWhiteSpace(x)).ToArray();
 
             return expressions;
         }
@@ -59,10 +59,12 @@ namespace Homework.ITAcademy6
                 .OrderBy(x => x.Word.Key)
                 .ToList();
 
-            var writer = new StreamWriter(_pathToReadingWritingFolder +"SortedByAlphabet.txt", false);
-            foreach (var expression in sortedWords)
+            using var sw = new StreamWriter(_pathToReadingWritingFolder + "SortedByAlphabet.txt", false);
             {
-                writer.WriteLine($"{expression.Word.Key}- {expression.Count}");
+                foreach (var expression in sortedWords)
+                {
+                    sw.WriteLine($"{expression.Word.Key}- {expression.Count}");
+                }
             }
         }
 
@@ -134,7 +136,7 @@ namespace Homework.ITAcademy6
 
         public void WriteToFile(string[] expressions, string writePath)
         {
-            using (var sw = new StreamWriter(writePath, false))
+            using var sw = new StreamWriter(writePath, false);
             {
                 foreach (var expression in expressions)
                 {
@@ -155,6 +157,7 @@ namespace Homework.ITAcademy6
             var writePath = _pathToReadingWritingFolder + "AdditionalDataFile.txt";
             var str = $"{DisplayLongestSentenceBySymbols()}~ {DisplayShortestSentenceByWords()}~ {MostCommonLetter()}";
             var arr=str.Split('~',StringSplitOptions.RemoveEmptyEntries);
+
             WriteToFile(arr, writePath);
         }
     }
