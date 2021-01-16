@@ -22,7 +22,7 @@ namespace Homework.ITAcademy6
         public async Task<string[]> SplitBySentences()
         {
             var text = await FileReader();
-            var sentences =Regex.Split(text, "[!.?;\"\\t\\r\\v\\n]", RegexOptions.Compiled);
+            var sentences = Regex.Split(text, "[!.?;\"\\t\\r\\v\\n]", RegexOptions.Compiled);
             var result = sentences.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
             return result;
@@ -47,7 +47,7 @@ namespace Homework.ITAcademy6
         }
 
 
-        public async void SortByAlphabet()
+        public async Task SortByAlphabet()
         {
             var words = await SplitByWords();
             var sortedWords = words
@@ -135,7 +135,7 @@ namespace Homework.ITAcademy6
         }
 
 
-        public async void WriteToFile(string[] expressions, string writePath)
+        public async Task WriteToFile(string[] expressions, string writePath)
         {
             await using var sw = new StreamWriter(writePath, false);
             {
@@ -146,20 +146,20 @@ namespace Homework.ITAcademy6
             }
         }
 
-        public async void WriteSplitedFiles()
+        public async Task WriteSplitedFiles()
         {
             WriteToFile(await SplitBySentences(), _pathToReadingWritingFolder + "SplitedBySentences.txt");
             WriteToFile(await SplitByWords(), _pathToReadingWritingFolder + "SplitedByWords.txt");
             WriteToFile(await SplitByPunctuationMarks(), _pathToReadingWritingFolder + "SplitedByPunctuationMark.txt");
         }
 
-        public void WriteAdditionalDataFile()
+        public async Task WriteAdditionalDataFile()
         {
             var writePath = _pathToReadingWritingFolder + "AdditionalDataFile.txt";
-            var str = $"{DisplayLongestSentenceBySymbols()}~ {DisplayShortestSentenceByWords()}~ {MostCommonLetter()}";
+            var str = $"{await DisplayLongestSentenceBySymbols()}~ {await DisplayShortestSentenceByWords()}~ {await MostCommonLetter()}";
             var arr = str.Split('~', StringSplitOptions.RemoveEmptyEntries);
 
-            WriteToFile(arr, writePath);
+            await WriteToFile(arr, writePath);
         }
     }
 }

@@ -11,15 +11,15 @@ namespace Homework.ITAcademy6
             Run();
         }
 
-        static void Run()
+        private static async void Run()
         {
             var handler = new FileHandler();
 
-            handler.WriteSplitedFiles();
+            await handler.WriteSplitedFiles();
 
-            handler.SortByAlphabet();
+            await handler.SortByAlphabet();
 
-            handler.WriteAdditionalDataFile();
+            await handler.WriteAdditionalDataFile();
         }
 
     }
