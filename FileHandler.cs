@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Homework.ITAcademy6
 {
     public class FileHandler
     {
-        private string _pathToReadingWritingFolder = "D:\\";
+        private string _pathToReadingWritingFolder = @"D:\HomeworkChebanitsa\";
 
         public string FileReader()
         {
@@ -60,7 +59,7 @@ namespace Homework.ITAcademy6
                 .OrderBy(x => x.Word.Key)
                 .ToList();
 
-            var writer = new StreamWriter("D:\\SortedByAlphabet.txt", false);
+            var writer = new StreamWriter(_pathToReadingWritingFolder +"SortedByAlphabet.txt", false);
             foreach (var expression in sortedWords)
             {
                 writer.WriteLine($"{expression.Word.Key}- {expression.Count}");
@@ -135,10 +134,12 @@ namespace Homework.ITAcademy6
 
         public void WriteToFile(string[] expressions, string writePath)
         {
-            var writer = new StreamWriter(writePath, false);
-            foreach (var expression in expressions)
+            using (var sw = new StreamWriter(writePath, false))
             {
-                writer.WriteLine(expression.Trim());
+                foreach (var expression in expressions)
+                {
+                    sw.WriteLine(expression.Trim());
+                }
             }
         }
 
@@ -152,11 +153,9 @@ namespace Homework.ITAcademy6
         public void WriteAdditionalDataFile()
         {
             var writePath = _pathToReadingWritingFolder + "AdditionalDataFile.txt";
-            var writer = new StreamWriter(writePath, false);
-
-            var str = $"{DisplayLongestSentenceBySymbols()}\n {DisplayShortestSentenceByWords()}\n {MostCommonLetter()}";
-            //Console.WriteLine(str);
-            writer.Write(str);
-        }// todo fix writing to file and delete comment
+            var str = $"{DisplayLongestSentenceBySymbols()}~ {DisplayShortestSentenceByWords()}~ {MostCommonLetter()}";
+            var arr=str.Split('~',StringSplitOptions.RemoveEmptyEntries);
+            WriteToFile(arr, writePath);
+        }
     }
 }
