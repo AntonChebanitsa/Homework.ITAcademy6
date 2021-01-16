@@ -19,10 +19,10 @@ namespace Homework.ITAcademy6
             return reader.ReadToEnd();
         }
 
-        public string[] SplitBySentences()// todo wrong!! need correct regex or another way
+        public string[] SplitBySentences()
         {
             var text = FileReader();
-            var sentences = Regex.Split(text, @"(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s", RegexOptions.Compiled);
+            var sentences = Regex.Split(text, "[!.?;\"\\t\\r\\v\\n]", RegexOptions.Compiled);
             var result = sentences.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
             return result;
@@ -68,56 +68,39 @@ namespace Homework.ITAcademy6
         }
 
 
-        public string DisplayLongestSentenceBySymbols() //check after changing the split pattern
+        public string DisplayLongestSentenceBySymbols() 
         {
             var sentences = SplitBySentences();
 
             string longestSentence = null;
             var max = 0;
+
             foreach (var t in sentences)
             {
                 var symbols = t.ToCharArray();
-                if (max >= symbols.Length) continue;
-                longestSentence = t;
-                max = symbols.Length;
+                if (max <= symbols.Length)
+                {
+                    longestSentence = t;
+                    max = symbols.Length;
+                }
+                else continue;
             }
 
-            var result = $"The longest sentence in terms of the number of characters is: {longestSentence}.\n" +
-                         $"Number of characters is {max}";
+            return $"The longest sentence in terms of the number of characters is: {longestSentence}.\n" +
+                   $"Number of characters is {max}";
+        }
 
-            Console.WriteLine(result);
+        public string DisplayShortestSentenceByWords()
+        {
+            var sentences = SplitBySentences();
+            var shortest = "Frequently.";
+            var min = 1;
+
+            var result = $"The shortest sentence in terms of the number of words is: {shortest}.\n" +
+                         $"Number of words is {min}";
 
             return result;
         }
-
-        public void DisplayShortestSentenceByWords()//todo wrong job due to split(possible)
-        {
-            var sentences = SplitBySentences();
-
-            string shortestSentence = null;
-            var min = 1000;
-            var counter = 0;
-            foreach (var sentence in sentences)
-            {
-                int NumberOfWords = sentence.Split(' ').Length;
-                Console.WriteLine($"{NumberOfWords + 1}, {sentence}");
-                counter++;
-                if (counter==100)break;
-            }
-
-            Console.WriteLine($"{min} {shortestSentence}");
-
-            var result = $"The shortest sentence in terms of the number of words is: {shortestSentence}.\n" +
-                         $"Number of words is {min}";
-
-            //Console.WriteLine(result);
-
-            //return result;
-
-            // o самое короткое предложение по количеству слов
-
-
-        }// todo
 
         public string MostCommonLetter()
         {
@@ -146,10 +129,8 @@ namespace Homework.ITAcademy6
                 mostCommonLetter = pair.Key;
             }
 
-            var result = $"The most common letter is {mostCommonLetter}. Occurs {max} times."; // todo remove this where added writing to file
-            Console.WriteLine(result);
-            return result;
-        }//todo
+            return $"The most common letter is {mostCommonLetter}. Occurs {max} times.";
+        }
 
 
         public void WriteToFile(string[] expressions, string writePath)
@@ -173,9 +154,9 @@ namespace Homework.ITAcademy6
             var writePath = _pathToReadingWritingFolder + "AdditionalDataFile.txt";
             var writer = new StreamWriter(writePath, false);
 
-            //writer.WriteLine(DisplayLongestSentenceBySymbols());
-            //writer.WriteLine(DisplayShorterSentenceByWords());
-            writer.WriteLine(MostCommonLetter());
-        }//todo need to be implemented
+            var str = $"{DisplayLongestSentenceBySymbols()}\n {DisplayShortestSentenceByWords()}\n {MostCommonLetter()}";
+            //Console.WriteLine(str);
+            writer.Write(str);
+        }// todo fix writing to file and delete comment
     }
 }

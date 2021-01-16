@@ -17,10 +17,9 @@ namespace Homework.ITAcademy6
 
             handler.WriteSplitedFiles();
 
-            //handler.SortByAlphabet();
-            //handler.WriteAdditionalDataFile();
-            //handler.DisplayLongestSentenceBySymbols();
-            handler.DisplayShortestSentenceByWords();
+            handler.SortByAlphabet();
+
+            handler.WriteAdditionalDataFile();
         }
 
     }
