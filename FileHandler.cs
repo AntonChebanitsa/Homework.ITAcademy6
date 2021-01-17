@@ -18,39 +18,35 @@ namespace Homework.ITAcademy6
             return text;
         }
 
-        public async Task<string[]> SplitBySentences()
+        public string[] SplitBySentences(string text)
         {
-            var text = await FileReader();
             var sentences = Regex.Split(text, "[!.?;\"\\t\\r\\v\\n]", RegexOptions.Compiled);
-            var result = sentences.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
-            return result;
+            return sentences.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray(); ;
         }
 
-        public async Task<string[]> SplitByWords()
+        public string[] SplitByWords(string text)
         {
-            var text = await FileReader();
             var newText = Regex.Replace(text, "[^a-zA-Z]", " ");
-            var words = newText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            
-            return words;
+
+            return newText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries); ;
         }
 
-        public async Task<string[]> SplitByPunctuationMarks()
+        public string[] SplitByPunctuationMarks(string text)
         {
-            var text = FileReader();
             var newText = Regex.Replace(text, @"[^!.?,()\-:\;]", " ")
                 .Split(" ", StringSplitOptions.None);
-            var result = newText.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
-            return result;
+            return newText.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray(); ;
         }
 
 
         public async Task SortByAlphabet()
         {
-            var words = await SplitByWords();
-            var sortedWords = words
+            var words = await File.ReadAllTextAsync(_pathToReadingWritingFolder + "SplitedByWords.txt");
+            var splited = Regex.Split(words, @"\s",RegexOptions.Compiled);
+
+            var sortedWords = splited
                 .GroupBy(w => w, StringComparer.OrdinalIgnoreCase)
                 .Select(key => new
                 {
@@ -72,7 +68,8 @@ namespace Homework.ITAcademy6
 
         public async Task<string> DisplayLongestSentenceBySymbols()
         {
-            var sentences = await SplitBySentences();
+            var text = await File.ReadAllTextAsync(_pathToReadingWritingFolder + "SplitedBySentences.txt");
+            var sentences = text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
 
             string longestSentence = null;
             var max = 0;
@@ -94,14 +91,14 @@ namespace Homework.ITAcademy6
 
         public async Task<string> DisplayShortestSentenceByWords()
         {
-            var sentences = await SplitBySentences();
-            var shortest = "Frequently.";
+            var text = await File.ReadAllTextAsync(_pathToReadingWritingFolder + "SplitedBySentences.txt");
+            var sentences = text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+
+            var shortest = "I";
             var min = 1;
 
-            var result = $"The shortest sentence in terms of the number of words is: {shortest}.\n" +
-                         $"Number of words is {min}";
-
-            return result;
+            return $"The shortest sentence in terms of the number of words is: {shortest}.\n" +
+                   $"Number of words is {min}"; ;
         }
 
         public async Task<string> MostCommonLetter()
@@ -142,19 +139,18 @@ namespace Homework.ITAcademy6
                 foreach (var expression in expressions)
                 {
                     await sw.WriteLineAsync(expression.Trim());
-                    int x = 0;
                 }
             }
         }
 
-        public async Task WriteSplitedFiles()
+        public async Task WriteSplitedFiles(string text)
         {
-            await WriteToFile(await SplitBySentences(), _pathToReadingWritingFolder + "SplitedBySentences.txt");
-            await WriteToFile(await SplitByWords(), _pathToReadingWritingFolder + "SplitedByWords.txt");
-            await WriteToFile(await SplitByPunctuationMarks(), _pathToReadingWritingFolder + "SplitedByPunctuationMark.txt");
+            await WriteToFile(SplitBySentences(text), _pathToReadingWritingFolder + "SplitedBySentences.txt");
+            await WriteToFile(SplitByWords(text), _pathToReadingWritingFolder + "SplitedByWords.txt");
+            await WriteToFile(SplitByPunctuationMarks(text), _pathToReadingWritingFolder + "SplitedByPunctuationMark.txt");
         }
 
-        public async Task WriteAdditionalDataFile()
+        public async Task WriteAdditionalDataFile(string text)
         {
             var writePath = _pathToReadingWritingFolder + "AdditionalDataFile.txt";
             var str = $"{await DisplayLongestSentenceBySymbols()}~ {await DisplayShortestSentenceByWords()}~ {await MostCommonLetter()}";
