@@ -44,7 +44,7 @@ namespace Homework.ITAcademy6
         public async Task SortByAlphabet()
         {
             var words = await File.ReadAllTextAsync(_pathToReadingWritingFolder + "SplitedByWords.txt");
-            var splited = Regex.Split(words, @"\s",RegexOptions.Compiled);
+            var splited = Regex.Split(words, @"\s", RegexOptions.Compiled);
 
             var sortedWords = splited
                 .GroupBy(w => w, StringComparer.OrdinalIgnoreCase)
@@ -92,13 +92,29 @@ namespace Homework.ITAcademy6
         public async Task<string> DisplayShortestSentenceByWords()
         {
             var text = await File.ReadAllTextAsync(_pathToReadingWritingFolder + "SplitedBySentences.txt");
-            var sentences = text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+            var sentences = text.Split("\n\r", StringSplitOptions.RemoveEmptyEntries);
 
-            var shortest = "I";
-            var min = 1;
+            var shortestSentence = "";
+            var elements = 5;
+            foreach (var sentence in sentences)
+            {
+                foreach (var character in sentence.ToCharArray())
+                {
+                    var counter = 0;
 
-            return $"The shortest sentence in terms of the number of words is: {shortest}.\n" +
-                   $"Number of words is {min}"; ;
+                    if (character == ' ')
+                        counter++;
+
+                    if (counter > elements)
+                    {
+                        elements = counter;
+                        shortestSentence = sentence;
+                    }
+                }
+            }
+
+            return $"The shortest sentence in terms of the number of words is: {shortestSentence}.\n" +
+                   $"Number of words is {elements}"; ;
         }
 
         public async Task<string> MostCommonLetter()
