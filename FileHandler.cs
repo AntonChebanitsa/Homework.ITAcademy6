@@ -33,13 +33,15 @@ namespace Homework.ITAcademy6
             var text = await FileReader();
             var newText = Regex.Replace(text, "[^a-zA-Z]", " ");
             var words = newText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
+            
             return words;
         }
 
         public async Task<string[]> SplitByPunctuationMarks()
         {
             var text = await FileReader();
+            var newText = Regex.Replace(text, @"[^!.?,()\-:\;]", " ");
+            //[^!.?,()-:\;
             var expressions = text.Split(new char[] { '!', '.', '?', ',', '(', ')', '-', ';', ':' },
                 StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
@@ -142,6 +144,7 @@ namespace Homework.ITAcademy6
                 foreach (var expression in expressions)
                 {
                     await sw.WriteLineAsync(expression.Trim());
+                    int x = 0;
                 }
             }
         }
