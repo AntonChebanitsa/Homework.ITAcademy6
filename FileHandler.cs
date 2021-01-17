@@ -38,12 +38,12 @@ namespace Homework.ITAcademy6
 
         public async Task<string[]> SplitByPunctuationMarks()
         {
-            var text = await FileReader();
-            var newText = Regex.Replace(text, @"[^!.?,()\-:\;]", " ");
-            var expressions = newText.Split(" ", 
-                StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            var text = FileReader();
+            var newText = Regex.Replace(text, @"[^!.?,()\-:\;]", " ")
+                .Split(" ", StringSplitOptions.None);
+            var result = newText.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
-            return expressions;
+            return result;
         }
 
 
