@@ -14,12 +14,12 @@ namespace Homework.ITAcademy6
         private static async void Run()
         {
             var handler = new FileHandler();
-            
-            handler.WriteSplitedFiles();
 
-             handler.SortByAlphabet();
+            await handler.WriteSplitedFiles();
 
-             handler.WriteAdditionalDataFile();
+            await handler.SortByAlphabet();
+
+            await handler.WriteAdditionalDataFile();
         }
 
     }

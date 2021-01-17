@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -41,8 +40,7 @@ namespace Homework.ITAcademy6
         {
             var text = await FileReader();
             var newText = Regex.Replace(text, @"[^!.?,()\-:\;]", " ");
-            //[^!.?,()-:\;
-            var expressions = text.Split(new char[] { '!', '.', '?', ',', '(', ')', '-', ';', ':' },
+            var expressions = newText.Split(" ", 
                 StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
             return expressions;
