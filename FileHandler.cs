@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -77,12 +78,9 @@ namespace Homework.ITAcademy6
             foreach (var t in sentences)
             {
                 var symbols = t.ToCharArray();
-                if (max <= symbols.Length)
-                {
-                    longestSentence = t;
-                    max = symbols.Length;
-                }
-                else continue;
+                if (max > symbols.Length) continue;
+                longestSentence = t;
+                max = symbols.Length;
             }
 
             return $"The longest sentence in terms of the number of characters is: {longestSentence}.\n" +
@@ -92,24 +90,26 @@ namespace Homework.ITAcademy6
         public async Task<string> DisplayShortestSentenceByWords()
         {
             var text = await File.ReadAllTextAsync(_pathToReadingWritingFolder + "SplitedBySentences.txt");
-            var sentences = text.Split("\n\r", StringSplitOptions.RemoveEmptyEntries);
+
+            text = text.Replace("\r\n", "\n");
+            var sentences = text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+
+            var listStr = new ArrayList();
+            foreach (var t in sentences)
+            {
+                var str = Regex.Split(t, @" ");
+                listStr.Add(str);
+            }
 
             var shortestSentence = "";
-            var elements = 5;
-            foreach (var sentence in sentences)
+            var elements = 1;
+
+            foreach (string[] strings in listStr)
             {
-                foreach (var character in sentence.ToCharArray())
+                if (strings.Length == 1)
                 {
-                    var counter = 0;
-
-                    if (character == ' ')
-                        counter++;
-
-                    if (counter > elements)
-                    {
-                        elements = counter;
-                        shortestSentence = sentence;
-                    }
+                    shortestSentence = strings[0];
+                    break;
                 }
             }
 
